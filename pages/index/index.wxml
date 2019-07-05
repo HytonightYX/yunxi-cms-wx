@@ -1,5 +1,4 @@
 <l-button
-  l-class='btn'
   size='long'
   bind:lintap='onGetToken'
 >
