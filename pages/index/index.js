@@ -1,9 +1,12 @@
-import {Base64} from 'js-base64'
+import {
+  Base64
+} from 'js-base64'
 
 Page({
   onGetToken() {
+    // code
     wx.login({
-      success: res => {
+      success: (res) => {
         if (res.code) {
           wx.request({
             url: 'http://localhost:3030/v1/token',
@@ -12,37 +15,251 @@ Page({
               account: res.code,
               type: 100
             },
-            success: res => {
+            success: (res) => {
               console.log(res.data)
-              wx.setStorage({
-                key: "token",
-                data: res.data.token
-              })
+              const code = res.statusCode.toString()
+              if (code.startsWith('2')) {
+                wx.setStorageSync('token', res.data.token)
+              }
             }
           })
         }
       }
     })
   },
+
+  onVerifyToken() {
+    wx.request({
+      url: 'http://localhost:3030/v1/token/verify',
+      method: 'POST',
+      data: {
+        token: wx.getStorageSync('token')
+      },
+      success: res => {
+        console.log(res.data)
+      }
+    })
+  },
+
   onGetLatest() {
     wx.request({
       url: 'http://localhost:3030/v1/classic/latest',
       method: 'GET',
       success: res => {
-        console.log(res)
+        console.log(res.data)
       },
       header: {
         Authorization: this._encode()
-      },
+      }
     })
   },
-  // 手动进行base64加密
+
+  onGetNext() {
+    wx.request({
+      url: 'http://localhost:3030/v1/classic/6/next',
+      method: 'GET',
+      success: res => {
+        console.log(res.data)
+      },
+      header: {
+        Authorization: this._encode()
+      }
+    })
+  },
+
+  onGetPrevious() {
+    wx.request({
+      url: 'http://localhost:3030/v1/classic/6/previous',
+      method: 'GET',
+      success: res => {
+        console.log(res.data)
+      },
+      header: {
+        Authorization: this._encode()
+      }
+    })
+  },
+
+  onGetClassicFavor() {
+    wx.request({
+      url: 'http://localhost:3030/v1/classic/100/1/favor',
+      method: 'GET',
+      success: res => {
+        console.log(res.data)
+      },
+      header: {
+        Authorization: this._encode()
+      }
+    })
+  },
+
+  onGetMyFavorList() {
+    wx.request({
+      url: 'http://localhost:3030/v1/classic/favor',
+      method: 'GET',
+      success: res => {
+        console.log(res.data)
+      },
+      header: {
+        Authorization: this._encode()
+      }
+    })
+  },
+
+  onGetClassicDetail() {
+    wx.request({
+      url: 'http://localhost:3030/v1/classic/100/1',
+      method: 'GET',
+      success: res => {
+        console.log(res.data)
+      },
+      header: {
+        Authorization: this._encode()
+      }
+    })
+  },
+
+  onLike() {
+    wx.request({
+      url: 'http://localhost:3030/v1/like',
+      method: 'POST',
+      data: {
+        artId: 1,
+        type: 100
+      },
+      success: res => {
+        console.log(res.data)
+      },
+      header: {
+        Authorization: this._encode()
+      }
+    })
+  },
+
+  onDisLike() {
+    wx.request({
+      url: 'http://localhost:3030/v1/like/cancel',
+      method: 'POST',
+      data: {
+        artId: 1,
+        type: 100
+      },
+      success: res => {
+        console.log(res.data)
+      },
+      header: {
+        Authorization: this._encode()
+      }
+    })
+  },
+
+  onGetHotBookList() {
+    wx.request({
+      url: 'http://localhost:3030/v1/book/hot-list',
+      method: 'GET',
+      success: res => {
+        console.log(res.data)
+      },
+      header: {
+        Authorization: this._encode()
+      }
+    })
+  },
+
+  onGetBookDetail() {
+    wx.request({
+      url: 'http://localhost:3030/v1/book/1120/detail',
+      method: 'GET',
+      success: res => {
+        console.log(res.data)
+      },
+      header: {
+        Authorization: this._encode()
+      }
+    })
+  },
+
+  onBookSearch() {
+    wx.request({
+      url: 'http://localhost:3030/v1/book/search',
+      method: 'GET',
+      data: {
+        q: '哈利',
+      },
+      success: res => {
+        console.log(res.data)
+      },
+      header: {
+        Authorization: this._encode()
+      }
+    })
+  },
+
+  onGetMyFavorsBookCount() {
+    wx.request({
+      url: 'http://localhost:3030/v1/book/favor/count',
+      method: 'GET',
+      // like key%
+      success: res => {
+        console.log(res.data)
+      },
+      header: {
+        Authorization: this._encode()
+      }
+    })
+  },
+
+  onGetBookFavor() {
+    wx.request({
+      url: 'http://localhost:3030/v1/book/1120/favor',
+      method: 'GET',
+      success: res => {
+        console.log(res.data)
+      },
+      header: {
+        Authorization: this._encode()
+      }
+    })
+  },
+
+  onGetComments() {
+    wx.request({
+      url: 'http://localhost:3030/v1/book/1120/short_comment',
+      method: 'GET',
+      success: res => {
+        console.log(res.data)
+      },
+      header: {
+        Authorization: this._encode()
+      }
+    })
+  },
+
+  onAddShortComment() {
+    wx.request({
+      url: 'http://localhost:3030/v1/book/add/short_comment',
+      method: 'POST',
+      data: {
+        content: '春风十里不如有你春风十里不如有你',
+        book_id: 1120
+      },
+      // like key%
+      success: res => {
+        console.log(res.data)
+      },
+      header: {
+        Authorization: this._encode()
+      }
+    })
+  },
+
   _encode() {
+    // account:password
+    // token
+    // token:
     const token = wx.getStorageSync('token')
-    console.log(token)
-    // 格式：Authorization: "Basic username:password"
-    // 现在username 就是token，password为空
-    const base64 = Base64.encode(token + ':' + '')
+    const base64 = Base64.encode(token + ':')
+    // Authorization:Basic base64(account:password)
     return 'Basic ' + base64
   }
 })
