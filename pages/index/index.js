@@ -185,6 +185,8 @@ Page({
       method: 'GET',
       data: {
         q: '哈利',
+        count: 12,
+        start: 3
       },
       success: res => {
         console.log(res.data)
@@ -224,7 +226,7 @@ Page({
 
   onGetComments() {
     wx.request({
-      url: 'http://localhost:3030/v1/book/1120/short_comment',
+      url: 'http://localhost:3030/v1/book/1120/short-comment',
       method: 'GET',
       success: res => {
         console.log(res.data)
@@ -237,11 +239,11 @@ Page({
 
   onAddShortComment() {
     wx.request({
-      url: 'http://localhost:3030/v1/book/add/short_comment',
+      url: 'http://localhost:3030/v1/book/add/short-comment',
       method: 'POST',
       data: {
-        content: '春风十里不如有你春风十里不如有你',
-        book_id: 1120
+        content: '春风十里不如',
+        bookId: 1120
       },
       // like key%
       success: res => {
